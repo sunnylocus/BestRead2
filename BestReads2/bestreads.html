@@ -51,7 +51,8 @@ function callbacks() {
 				if (ajax.readyState == 4 && ajax.status == 200) {
 					console.log(ajax.responseText);
 					var argsJson = JSON.parse(ajax.responseText);
-					var bookDiv ="<div class='onereview' style='font-size:15px;'>";
+					 //The purpose of limiting font-size is to make it compatibility on Windows environment
+					var bookDiv ="<div class='onereview' style='font-size:14px;'>"; 
 					bookDiv += "<img src='"+folder+"/cover.jpg'/>";
 					bookDiv += "<div class='thedetails'>";
 					bookDiv += "<b>"+argsJson["title"]+"</b><br>";
