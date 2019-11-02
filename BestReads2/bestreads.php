@@ -13,7 +13,22 @@
 // 2) Use a different query parameter to echo back the html for one information
 // page containing the book cover, title, author, ...
 // File name: bestreads.css
-$bookArray = glob ( './books/*' );
-// print_r($bookArray);
-echo json_encode ( $bookArray );
+if(isset($_GET['folder'])) {
+    $info = file_get_contents($_GET['folder'].'/info.txt');
+    $review = file_get_contents($_GET['folder'].'/review.txt');
+    $description = file_get_contents($_GET['folder'].'/description.txt');
+    $movieJson = array(
+        "title" => explode("\n",$info)[0],
+        "author" => explode("\n",$info)[1],
+        "description" => $description,
+        "writtenby" => explode("\n",$review)[0],
+        "rating" => explode("\n",$review)[1],
+        "review" => explode("\n",$review)[2]
+    );
+    echo json_encode($movieJson);
+} else {
+    $bookArray = glob ( './books/*' );
+    // print_r($bookArray);
+    echo json_encode ( $bookArray );
+}
 ?>

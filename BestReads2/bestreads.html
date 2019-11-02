@@ -16,8 +16,11 @@
 </div>
 <div id="allbooks"></div>
 <script>
+var aButton = document.getElementById("back");
+aButton.addEventListener("click",showAll);
 
 function showAll() {
+	document.getElementById('allbooks').innerHTML ="";
 	var ajax = new XMLHttpRequest();
 	ajax.open("GET", "bestreads.php", true); 
 	ajax.send();
@@ -26,7 +29,7 @@ function showAll() {
 			var array = JSON.parse(ajax.responseText);
 			for (var index = 0; index < array.length; index++) { 
 				var bookDiv ="<div class='onebook'>";
-				bookDiv += "<img src='"+array[index]+"/cover.jpg' />";
+				bookDiv += "<img src='"+array[index]+"/cover.jpg' alt='"+array[index]+"'/>";
 				bookDiv += "</div>";
 				document.getElementById('allbooks').innerHTML += bookDiv; 
 			} 
@@ -37,9 +40,34 @@ function showAll() {
 
 function callbacks() {
 	var books = document.getElementsByClassName('onebook');
-	for(i=0; i < books.length; i++){
-		books[i].addEventListener("change", function(){
-			alert('test');
+	for(var i=0; i < books.length; i++) {
+		//books[i].addEventListener("click",showOneBook(books[i]));
+		books[i].addEventListener("click",function() {
+			var folder = this.getElementsByTagName('img')[0].alt;
+			var ajax = new XMLHttpRequest();
+			ajax.open("GET", "bestreads.php?folder="+folder, true); 
+			ajax.send();
+			ajax.onreadystatechange = function () {
+				if (ajax.readyState == 4 && ajax.status == 200) {
+					console.log(ajax.responseText);
+					var argsJson = JSON.parse(ajax.responseText);
+					var bookDiv ="<div class='onereview' style='font-size:14px;font-family:    Arial, Helvetica, sans-serif'>";
+					bookDiv += "<img src='"+folder+"/cover.jpg'/>";
+					bookDiv += "<div class='thedetails'>";
+					bookDiv += "<b>"+argsJson["title"]+"</b><br>";
+					bookDiv += argsJson["author"]+"<br><br>";
+					bookDiv += argsJson["description"]+"<br><br>";
+					bookDiv += "<b>"+argsJson["writtenby"]+" ";
+					for(let i=0; i < parseInt(argsJson["rating"]); i++) {
+						bookDiv += "*";
+					}
+					bookDiv +="</b><br>";
+					bookDiv += argsJson["review"];
+					bookDiv += "</div>";
+					bookDiv += "</div>";
+					document.getElementById('allbooks').innerHTML = bookDiv; 
+				}; // End anonymous function
+			}  
 		});
 	}
 }
