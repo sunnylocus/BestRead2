@@ -1,0 +1,49 @@
+<!-- Weiyang Zhang -->
+<!DOCTYPE html>
+<html>
+<!-- CSC 337: Assignment BestReads -->
+<head>
+<link rel="stylesheet" type="text/css" href="bestreads.css" />
+<title>Best Reads</title>
+</head>
+<body onload="showAll()">
+
+<div id="header">
+<div>
+  <span>bestreads</span>
+</div>
+  <span id="back">home</span>
+</div>
+<div id="allbooks"></div>
+<script>
+
+function showAll() {
+	var ajax = new XMLHttpRequest();
+	ajax.open("GET", "bestreads.php", true); 
+	ajax.send();
+	ajax.onreadystatechange = function () {
+		if (ajax.readyState == 4 && ajax.status == 200) {
+			var array = JSON.parse(ajax.responseText);
+			for (var index = 0; index < array.length; index++) { 
+				var bookDiv ="<div class='onebook'>";
+				bookDiv += "<img src='"+array[index]+"/cover.jpg' />";
+				bookDiv += "</div>";
+				document.getElementById('allbooks').innerHTML += bookDiv; 
+			} 
+			callbacks();
+		}; // End anonymous function
+	}
+}
+
+function callbacks() {
+	var books = document.getElementsByClassName('onebook');
+	for(i=0; i < books.length; i++){
+		books[i].addEventListener("change", function(){
+			alert('test');
+		});
+	}
+}
+</script>
+
+</body>
+</html>
